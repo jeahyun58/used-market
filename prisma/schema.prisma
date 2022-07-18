@@ -20,4 +20,14 @@ model User {
   avatar    String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  tokens    Token[]
+}
+
+model Token {
+  id        Int      @id @default(autoincrement())
+  payload   String   @unique
+  user      User     @relation(fields: [userId], references: [id]) //이것은 데이터베이스에는 들어가지않음
+  userId    Int //prisma에게 userId로 특정유저를 가르키는 것을 알려줘야함
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
