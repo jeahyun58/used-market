@@ -1,14 +1,18 @@
 import { useState } from "react";
 
-interface UseMutationState {
+interface UseMutationState<T> {
   loading: boolean;
-  data?: object;
+  data?: T;
   error?: object;
 }
-type UseMutationResult = [(data: any) => void, UseMutationState];
+type UseMutationResult<T> = [(data: any) => void, UseMutationState<T>];
 
-export default function useMutation(url: string): UseMutationResult {
-  const [state, setSate] = useState<UseMutationState>({
+/* UseMutation 뒤에 <T = any>를 붙여주고 나머지 insterface뒤에도 <T>를 붙이는 이유 
+=> `pages/enter.tsx`에서 data?.ok? 에서 ok를 object가 아니라고 하기때문에 변경함 */
+export default function useMutation<T = any>(
+  url: string
+): UseMutationResult<T> {
+  const [state, setSate] = useState<UseMutationState<T>>({
     loading: false,
     data: undefined,
     error: undefined,
