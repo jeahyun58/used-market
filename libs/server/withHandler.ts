@@ -5,11 +5,18 @@ export interface ResponseType {
   [key: string]: any;
 }
 
+interface ConfigType {
+  method: "GET" | "POST" | "DELETE";
+  handler: (req: NextApiRequest, res: NextApiResponse) => void;
+  isPrivate?: boolean;
+}
+
 // 먼저 fn을 어떻게 쓸지 적고 그후에 세부사항을 구현하는 작업방식 추천
-export default function withHandler(
-  method: "GET" | "POST" | "DELETE",
-  fn: (req: NextApiRequest, res: NextApiResponse) => void
-) {
+export default function withHandler({
+  method,
+  isPrivate = true, // 기본값을 false로 처음부터 설정함
+  handler,
+}: ConfigType) {
   return async function (
     req: NextApiRequest,
     res: NextApiResponse
@@ -18,8 +25,11 @@ export default function withHandler(
     if (req.method !== method) {
       return res.status(405).end();
     }
+    if (isPrivate && !req.session.user) {
+      return res.status(401).json({ ok: false, error: "Plz log in." });
+    }
     try {
-      await fn(req, res);
+      await handler(req, res);
     } catch (error) {
       console.log(error);
       return res.status(500).json({ error });

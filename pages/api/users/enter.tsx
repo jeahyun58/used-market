@@ -12,7 +12,7 @@ async function handler(
   res: NextApiResponse<ResponseType>
 ) {
   const { phone, email } = req.body;
-  const user = phone ? { phone: +phone } : email ? { email } : null;
+  const user = phone ? { phone: phone } : email ? { email } : null;
   if (!user) res.status(400).json({ ok: false });
   const payload = Math.floor(100000 + Math.random() * 900000) + ""; // + ""을 추가하면 string으로 바꿔줌
   const token = await client.token.create({
@@ -96,8 +96,11 @@ async function handler(
     }
     console.log(user);
   } */
-  return res.json({ ok: true });
+  return res.json({
+    ok: true,
+  });
 } //handler function을 먼저 작성한뒤
 
 //withHandler의 핵심은 "POST"코드를 대신 실행시켜주는 것
-export default withHandler("POST", handler); //export default withHandler을 해서 진행
+
+export default withHandler({ method: "POST", handler, isPrivate: false }); //export default withHandler을 해서 진행

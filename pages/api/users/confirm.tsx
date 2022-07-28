@@ -28,4 +28,6 @@ async function handler(
   res.json({ ok: true });
 }
 
-export default withApiSession(withHandler("POST", handler)); //export default withHandler을 해서 진행
+export default withApiSession(
+  withHandler({ method: "POST", handler, isPrivate: false })
+); //export default withHandler을 해서 진행
