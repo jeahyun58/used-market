@@ -10,7 +10,11 @@ export default function withHandler(
   method: "GET" | "POST" | "DELETE",
   fn: (req: NextApiRequest, res: NextApiResponse) => void
 ) {
-  return async function (req: NextApiRequest, res: NextApiResponse) {
+  return async function (
+    req: NextApiRequest,
+    res: NextApiResponse
+  ): Promise<any> {
+    //Promise<any>를 하는이유 confirm.tsx에서 password void문제 해결
     if (req.method !== method) {
       return res.status(405).end();
     }
