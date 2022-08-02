@@ -4,9 +4,19 @@ import Item from "@components/item";
 import Layout from "@components/layout";
 import useUser from "@libs/client/useUser";
 import Head from "next/head";
+import useSWR from "swr";
+import { Product } from "@prisma/client";
+
+//아래 data?.products?.map((product) => 에 들어가는 product를 타입스크립가 모르기때문에 useSWR을 이용 interface를 선언하여 알려줌
+interface ProductsResponse {
+  ok: boolean;
+  products: Product[];
+}
 
 const Home: NextPage = () => {
   const { user, isLoading } = useUser();
+  const { data } = useSWR<ProductsResponse>("/api/products");
+  console.log(data);
 
   return (
     <Layout title="홈" hasTabBar>
@@ -14,12 +24,12 @@ const Home: NextPage = () => {
         <title>Home</title>
       </Head>
       <div className="flex flex-col space-y-5 divide-y">
-        {[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1].map((_, i) => (
+        {data?.products?.map((product) => (
           <Item
-            id={i}
-            key={i}
-            title="iPhone 14"
-            price={99}
+            id={product.id}
+            key={product.id}
+            title={product.name}
+            price={product.price}
             comments={1}
             hearts={1}
           />

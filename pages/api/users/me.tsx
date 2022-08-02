@@ -22,7 +22,7 @@ true, false 등으로 나열되어 어떤 정보를 표현하는지 모르는 �
 */
 export default withApiSession(
   withHandler({
-    method: "GET",
+    methods: ["GET"],
     handler,
   })
 ); //export default withHandler을 해서 진행

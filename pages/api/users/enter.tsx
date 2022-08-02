@@ -103,4 +103,4 @@ async function handler(
 
 //withHandler의 핵심은 "POST"코드를 대신 실행시켜주는 것
 
-export default withHandler({ method: "POST", handler, isPrivate: false }); //export default withHandler을 해서 진행
+export default withHandler({ methods: ["POST"], handler, isPrivate: false }); //export default withHandler을 해서 진행
