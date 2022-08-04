@@ -7,7 +7,10 @@ async function handler(
   req: NextApiRequest,
   res: NextApiResponse<ResponseType>
 ) {
-  const { id } = req.query;
+  const {
+    query: { id },
+    session: { user },
+  } = req;
   const product = await client.product.findUnique({
     where: {
       id: +id.toString(),
@@ -39,7 +42,19 @@ async function handler(
       },
     },
   });
-  res.json({ ok: true, product, relatedProducts });
+  //findFirst가 favorite 레코드를 리턴하기 때문에
+  const isLiked = Boolean(
+    await client.fav.findFirst({
+      where: {
+        productId: product?.id,
+        userId: user?.id,
+      },
+      select: {
+        id: true,
+      },
+    })
+  );
+  res.json({ ok: true, product, isLiked, relatedProducts });
 }
 
 export default withApiSession(
