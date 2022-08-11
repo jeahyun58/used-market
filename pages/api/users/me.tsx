@@ -25,4 +25,4 @@ export default withApiSession(
     methods: ["GET"],
     handler,
   })
-); //export default withHandler을 해서 진행
+);
